@@ -50,16 +50,17 @@ async def greet(ctx):
     """
     await ctx.send(f"Hey there, {ctx.author.display_name}! I'm Helpy Fazbear, here to assist!")
 
-@bot.command(name='help')
+@bot.command(name='assist')
 async def show_help(ctx):
     """
-    Provides a simple list of available commands when a user types !help
+    Provides a simple list of available commands when a user types !assist
+    NOTE: Renamed from !help to avoid conflict with Discord's default help command.
     """
     help_message = (
         "**Helpy Fazbear Assistance Protocol:**\n"
         f"`{COMMAND_PREFIX}hello` - I'll greet you!\n"
         f"`{COMMAND_PREFIX}bear` - Hear a fun, classic quote from the Fazbear family.\n"
-        f"`{COMMAND_PREFIX}help` - You just used this command!"
+        f"`{COMMAND_PREFIX}assist` - Shows this list of commands."
     )
     await ctx.send(help_message)
 
