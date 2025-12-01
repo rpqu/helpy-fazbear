@@ -6,10 +6,10 @@ from discord.ext import commands
 import os
 
 # --- Configuration ---
-# !!! IMPORTANT: PASTE YOUR BOT TOKEN HERE !!!
-# This token allows your code to log in as 'Helpy Fazbear'.
-# Make sure to keep this token secret!
-BOT_TOKEN = "MTQ0NTAxNDY5ODc4NDMyNTY4Mg.Gspj7S.stbki4U_r7Uywu8SR7MyCqMN477wT3Fueg1nhU" 
+# !!! IMPORTANT: The bot token is now read from the environment variables (for security).
+# DO NOT hardcode your token directly in this file! 
+# You must set the BOT_TOKEN variable securely on your hosting platform (like Render or Vercel).
+BOT_TOKEN = os.getenv("BOT_TOKEN") 
 
 # Define the command prefix (what users type before a command, like !hello)
 COMMAND_PREFIX = "!"
@@ -79,8 +79,8 @@ async def quote(ctx):
     await ctx.send(random.choice(quotes))
 
 # --- Run the Bot ---
-if BOT_TOKEN == "YOUR_PASTED_BOT_TOKEN_HERE":
-    print("\n!!! ERROR: Please replace 'YOUR_PASTED_BOT_TOKEN_HERE' in the code with your actual Bot Token. !!!\n")
+if not BOT_TOKEN:
+    print("\n!!! ERROR: The BOT_TOKEN environment variable was not found. Please set it securely on your hosting platform. !!!\n")
 else:
     try:
         bot.run(BOT_TOKEN)
