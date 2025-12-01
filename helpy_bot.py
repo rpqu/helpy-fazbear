@@ -4,6 +4,7 @@
 import discord
 from discord.ext import commands
 import os
+import random # Import random for selecting responses
 
 # --- Configuration ---
 # !!! IMPORTANT: The bot token is now read from the environment variables (for security).
@@ -17,7 +18,7 @@ COMMAND_PREFIX = "!"
 # Configure the intents required by Discord.
 # We enabled these in the Developer Portal (Message Content, Members, Presence).
 intents = discord.Intents.default()
-intents.message_content = True  # Required to read message content
+intents.message_content = True  # Required to read message content (CRITICAL for !command and on_message)
 intents.members = True          # Required for server member information (good practice)
 intents.presences = True        # Required for presence updates (good practice)
 
@@ -41,7 +42,36 @@ async def on_ready():
     print("Bot is ready to receive commands.")
     print("-----------------------------------------")
 
-# --- Bot Commands ---
+@bot.event
+async def on_message(message):
+    """
+    Called when a message is sent in a channel the bot can see.
+    This function implements the new chat reading and response logic.
+    """
+    # 1. Ignore messages from the bot itself to prevent infinite loops
+    if message.author == bot.user:
+        return
+
+    # 2. Process commands first (e.g., !hello, !assist, !bear)
+    await bot.process_commands(message)
+
+    # 3. Slang response logic
+    # Convert message content to lowercase for easier keyword matching
+    content = message.content.lower()
+    
+    # List of keywords that trigger the response
+    trigger_words = ["cap", "lies", "lie", "not true", "nah", "frfr"]
+    
+    # Check if the message contains any of the trigger words
+    if any(word in content for word in trigger_words):
+        
+        # Responses to choose from
+        slang_responses = ["on fanum", "he lyin", "no cap, that's facts", "rizz"]
+        
+        # Send a random slang response
+        await message.channel.send(random.choice(slang_responses))
+
+# --- Bot Commands (These are processed above by bot.process_commands) ---
 
 @bot.command(name='hello')
 async def greet(ctx):
@@ -76,7 +106,6 @@ async def quote(ctx):
         "That's one less thing to worry about!",
         "Remember to check your maintenance panels frequently."
     ]
-    import random
     await ctx.send(random.choice(quotes))
 
 # --- Run the Bot ---
